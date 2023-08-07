@@ -1,0 +1,26 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./dev/test/index.js",
+    "start": "node ./src/index.js",
+    "deploy": "node ./src/deploy/index.js",
+    "dev": "node ./dev/_index.js",
+    "dev-deploy": "node ./dev/_deploy.js",
+    "dev-clearCommands": "node ./dev/_clearCommands.js",
+    "lint": "npx eslint ./src/ --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "discord.js": "^14.12.1",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.46.0"
+  }
+}
