@@ -49,7 +49,7 @@ class CachedStorage {
 		if (!Array.isArray(data)) throw new TypeError('[INVALID_TYPE] "data" must be an array.');
 		this._cachedStorage[name] = data;
 		this.save();
-		return this._cachedStorage[name];
+		return this._cachedStorage[name] ?? null;
 	}
 
 	/**
@@ -74,8 +74,12 @@ class CachedStorage {
 		if (typeof name != 'string') throw new TypeError('[INVALID_TYPE] "name" must be a string.');
 		if (!Array.isArray(items)) throw new TypeError('[INVALID_TYPE] "items" must be an array.');
 		const dataArray = this.get(name);
-		dataArray.push(...items);
-		return this.set(name, dataArray);
+		if (!dataArray || dataArray[0].length === 0) {
+			return this.set(name, items)
+		} else {
+			dataArray.push(...items);
+			return this.set(name, dataArray);
+		}
 	}
 
 	remove(name, ...items) {
@@ -91,8 +95,8 @@ class CachedStorage {
      * @private
      */
 	fetch(_cachedStoragePath = this.cachedStoragePath) {
-		if (!fs.existsSync(path.join(__dirname, _cachedStoragePath))) {fs.writeFileSync(path.join(__dirname, _cachedStoragePath), '', { encoding: 'utf-8' });}
-		const data = fs.readFileSync(path.join(__dirname, _cachedStoragePath), { encoding: 'utf-8' }).toString().split('/');
+		if (!fs.existsSync(_cachedStoragePath)) {fs.writeFileSync(_cachedStoragePath, '', { encoding: 'utf-8' });}
+		const data = fs.readFileSync(_cachedStoragePath, { encoding: 'utf-8' }).toString().split('/');
 		const cachedStorage = {};
 		for (const el of data) {
 			if (!el || el === undefined) break;
@@ -111,10 +115,12 @@ class CachedStorage {
 	save(_cachedStoragePath = this.cachedStoragePath) {
 		const dataStringArray = [];
 		for (const prop in this._cachedStorage) {
-			dataStringArray.push(`:${prop}:[${this._cachedStorage[prop].toString()}]`);
+			const data = this._cachedStorage[prop]
+			dataStringArray.push(`:${prop}:[${data}]`);
 		}
 		const data = dataStringArray.join('/') + '/';
-		fs.writeFileSync(path.join(__dirname, _cachedStoragePath), data, { encoding: 'utf-8' });
+		console.log(data)
+		fs.writeFileSync(_cachedStoragePath, data, { encoding: 'utf-8' });
 	}
 }
 

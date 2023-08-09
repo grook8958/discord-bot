@@ -5,6 +5,8 @@ const Console = require('./utils/BotConsole');
 const path = require('path');
 const fs = require('fs');
 
+const CommandPermissionManager = require('./modules/CommandPermissionManager');
+
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildMembers],
 });
@@ -41,5 +43,8 @@ for (const file of eventFiles) {
 		client.on(event.name, (...args) => event.execute(...args));
 	}
 }
+
+//Init Modules
+client.commandPermissionManager = new CommandPermissionManager();
 
 client.login(process.env.DISCORD_TOKEN);
