@@ -16,11 +16,11 @@ module.exports = {
 
 			// Add permission
 				.addSubcommand(sub =>
-					sub.setName('set')
-						.setDescription('Set the individual role/user permissions for a command.')
+					sub.setName('add')
+						.setDescription('Add individual role/user permission for a command.')
 						.addStringOption(opt =>
 							opt.setName('command')
-							.setDescription('The command to set the permissions')
+							.setDescription('The command to add the permission')
 							.setRequired(true)
 							.setChoices(...cmds.map(cmd => {
 								return { name: cmd, value: cmd };
@@ -28,7 +28,7 @@ module.exports = {
 						)
 						.addMentionableOption(opt =>
 							opt.setName('user-or-role')
-							.setDescription('The user or role to set the permisions for.')
+							.setDescription('The user or role to add the permision for.')
 							.setRequired(true)
 						)
 						.addBooleanOption(opt => 
@@ -51,8 +51,8 @@ module.exports = {
 
 		switch(group) {
 			case 'command-permission':
-				if (subcmd === 'set') {
-					await commandPermissionGroup.set(interaction)
+				if (subcmd === 'add') {
+					await commandPermissionGroup.add(interaction)
 				}
 				break;
 		}
