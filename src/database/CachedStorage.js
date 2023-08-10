@@ -1,12 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const arrayRemove = (arr, ...items) => {
-	items.forEach(item => {
-		const index = arr.indexOf(item);
-		arr.splice(index, 1);
-	});
-	return arr;
-};
 
 class CachedStorage {
 	/**
@@ -31,10 +24,13 @@ class CachedStorage {
 	/**
      * Retrieve a specific data array from the Cached Storage.
      * @param {string} name The name of the data array
+	 * @param {?boolean} force Wether to force fetch 
      * @returns {Array<string>}
      */
-	get(name) {
+	get(name, force = false) {
 		if (typeof name != 'string') throw new TypeError('[INVALID_TYPE] "name" must be a string.');
+		if (typeof force != 'boolean') throw new TypeError('[INVALID_TYPE] "force" must be a boolean.');
+		if (force) this.fetch();
 		return this._cachedStorage[name];
 	}
 
@@ -85,14 +81,13 @@ class CachedStorage {
 	remove(name, ...items) {
 		if (typeof name != 'string') throw new TypeError('[INVALID_TYPE] "name" must be a string.');
 		if (!Array.isArray(items)) throw new TypeError('[INVALID_TYPE] "items" must be an array.');
-		return this.set(name, arrayRemove(this.get(name), items));
+		return this.set(name, CachedStorage.arrayRemove(this.get(name), items));
 	}
 
 	/**
      * Retrieve all cached data from the file.
      * @param {string} _cachedStoragePath Path to the cached storage.
      * @returns {Object}
-     * @private
      */
 	fetch(_cachedStoragePath = this.cachedStoragePath) {
 		if (!fs.existsSync(_cachedStoragePath)) {fs.writeFileSync(_cachedStoragePath, '', { encoding: 'utf-8' });}
@@ -100,8 +95,8 @@ class CachedStorage {
 		const cachedStorage = {};
 		for (const el of data) {
 			if (!el || el === undefined) break;
-			const cachedDataId = el.substring(el.indexOf(':') + 1, el.lastIndexOf(':'));
-			const cachedData = el.replace(`:${cachedDataId}:`, '').replace('[', '').replace(']', '').split(',');
+			const cachedDataId = el.substring(el.indexOf(':') + 1, el.indexOf(':', 1));
+			const cachedData = el.replace(`:${cachedDataId}:`, '').replace('[', '').replace(']', '').split('|');
 			cachedStorage[cachedDataId] = cachedData;
 		}
 		return cachedStorage;
@@ -116,12 +111,19 @@ class CachedStorage {
 		const dataStringArray = [];
 		for (const prop in this._cachedStorage) {
 			const data = this._cachedStorage[prop]
-			dataStringArray.push(`:${prop}:[${data}]`);
+			dataStringArray.push(`:${prop}:<${data.join('|')}>`);
 		}
 		const data = dataStringArray.join('/') + '/';
-		console.log(data)
 		fs.writeFileSync(_cachedStoragePath, data, { encoding: 'utf-8' });
 	}
+
+	static arrayRemove = (arr, ...items) => {
+		items.forEach(item => {
+			const index = arr.indexOf(item);
+			arr.splice(index, 1);
+		});
+		return arr;
+	};
 }
 
 module.exports = CachedStorage;
