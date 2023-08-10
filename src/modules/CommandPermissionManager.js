@@ -24,7 +24,7 @@ class CommandPermissionManager {
 	 * Set permissions for a command
 	 * @param {string} guildId 
 	 * @param {Array<Command>} commands 
-	 * @returns {Array<Command>}}
+	 * @returns {Array<Command>}
 	 */
 	set(guildId, commands) {
 		if (typeof guildId !== 'string') return Console.error('TypeError: guildId must be a string.');
@@ -45,15 +45,35 @@ class CommandPermissionManager {
 		return this.controller.push(guildId, command);
 	}
 
-	addPermission(guildId, commandName, permission) {
-		const commands = this.get(guildId);
-		const command = commands.find(cmd => cmd.name === commandName);
-		
-
-	}
 	/**
-	 * [ { commandName, [ ] } ]
+	 * Adds one or more permisisons to a command.
+	 * @param {string} guildId 
+	 * @param {string} commandName 
+	 * @param  {Array<CommandPermission>} permissions 
+	 * @returns {Array<Command>}
 	 */
+	addPermissions(guildId, commandName, permissions) {
+		const commands = this.get(guildId);
+		if (commands.length === 0) return this.set(guildId, [{name: commandName, permissions: permissions}]);
+		const command = commands.find(cmd => cmd.name === commandName);
+		command.permissions.push(...permissions);
+		return this.set(guildId, commands);
+	}
+
+	/**
+	 * Removes one or more permissions to a command
+	 * @param {string} guildId 
+	 * @param {string} commandName 
+	 * @param {Array<CommandPermission>} permissions 
+	 * @returns {Array<Command>}
+	 */
+	removePermissions(guildId, commandName, permissions) {
+		const commands = this.get(guildId);
+		if (commands.length === 0) return Console.warn('Trying to remove permissions from an empty array.')
+		const command = commands.find(cmd => cmd.name === commandName);
+		CommandPermissionStorageController.arrayRemove(command.permissions, ...permissions);
+		return this.set(guildId, commands);
+	}
 
 	/**
 	 * Get permissions for a command
