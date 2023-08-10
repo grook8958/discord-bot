@@ -14,6 +14,7 @@ module.exports = {
 		}
 
 		try {
+			Console.log(`Running /${interaction.commandName}`);
 			await command.execute(interaction);
 		}
 		catch (error) {
