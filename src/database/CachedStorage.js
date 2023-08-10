@@ -31,7 +31,7 @@ class CachedStorage {
 		if (typeof name != 'string') throw new TypeError('[INVALID_TYPE] "name" must be a string.');
 		if (typeof force != 'boolean') throw new TypeError('[INVALID_TYPE] "force" must be a boolean.');
 		if (force) this.fetch();
-		return this._cachedStorage[name];
+		return this._cachedStorage[name] ?? [];
 	}
 
 	/**
@@ -96,7 +96,7 @@ class CachedStorage {
 		for (const el of data) {
 			if (!el || el === undefined) break;
 			const cachedDataId = el.substring(el.indexOf(':') + 1, el.indexOf(':', 1));
-			const cachedData = el.replace(`:${cachedDataId}:`, '').replace('[', '').replace(']', '').split('|');
+			const cachedData = el.replace(`:${cachedDataId}:`, '').replace('<', '').replace('>', '').split('|');
 			cachedStorage[cachedDataId] = cachedData;
 		}
 		return cachedStorage;
