@@ -36,6 +36,28 @@ module.exports = {
 							.setDescription('Wether the role or user have permission to use the command.')
 							.setRequired(true)
 						),
+				)
+				.addSubcommand(sub =>
+					sub.setName('remove')
+						.setDescription('Remove individual role/user permission for a command.')
+						.addStringOption(opt =>
+							opt.setName('command')
+							.setDescription('The command to remove the permission')
+							.setRequired(true)
+							.setChoices(...cmds.map(cmd => {
+								return { name: cmd, value: cmd };
+							}))
+						)
+						.addMentionableOption(opt =>
+							opt.setName('user-or-role')
+							.setDescription('The user or role to remove the permision for.')
+							.setRequired(true)
+						)
+						.addBooleanOption(opt => 
+							opt.setName('permission')
+							.setDescription('Wether the role or user have permission to use the command.')
+							.setRequired(true)
+						),
 				),
 		),
 	/**

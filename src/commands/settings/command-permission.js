@@ -33,3 +33,35 @@ exports.add = async (interaction) => {
         })
     }
 }
+
+/**
+ * 
+ * @param {ChatInputCommandInteraction} interaction 
+ */
+exports.remove = async (interaction) => {
+    const commandName = interaction.options.getString('command', true);
+    const userORrole = interaction.options.getMentionable('user-or-role', true);
+    const permission = interaction.options.getBoolean('permission', true);    
+    const id = (await Util.getCommands(interaction.guild)).find(cmd => cmd.name === commandName).id;
+    
+    if (userORrole instanceof Role) {
+        interaction.client.commandPermissionManager.removePermissions(interaction.guild.id, commandName, [{ id: userORrole.id, type: "ROLE", permission: permission }]);
+        let roleName;
+        if (userORrole.name === '@everyone') roleName = '@everyone';
+        else roleName = `<@&${userORrole.id}>`
+        const msg = `Removed permission to </${commandName}:${id}> for ${roleName}`;
+        await interaction.editReply({
+            embeds: [Util.successEmbed(msg)]
+        });
+    } else if (userORrole instanceof GuildMember) {
+        interaction.client.commandPermissionManager.removePermissions(interaction.guild.id, commandName, [{ id: userORrole.id, type: "USER", permission: permission }]);
+        await interaction.editReply({
+            embeds: [Util.successEmbed(`Removed permission to </${commandName}:${id}> for <@${userORrole.id}>`)]
+        });
+    } else { 
+        Console.error('Invalid User or Role provided');
+        return await interaction.editReply({
+            embeds: [Util.errorEmbed('An error occured while executing the command. Please try again.')]
+        })
+    }
+}

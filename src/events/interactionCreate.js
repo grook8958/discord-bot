@@ -1,9 +1,18 @@
-const { Events } = require('discord.js');
+const { Events, CommandInteraction } = require('discord.js');
 const Console = require('../utils/BotConsole');
 
 module.exports = {
 	name: Events.InteractionCreate,
+	/**
+	 * 
+	 * @param {import('discord.js').Interaction} interaction 
+	 * @returns 
+	 */
 	async execute(interaction) {
+		if (interaction.isAutocomplete()) {
+			
+		}
+		
 		if (!interaction.isChatInputCommand()) return;
 
 		const command = interaction.client.commands.get(interaction.commandName);
