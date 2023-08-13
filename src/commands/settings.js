@@ -9,12 +9,9 @@ module.exports = {
 		.setDescription('Configure the bot\'s setting')
 		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
-	// Command Permission settings ( /settings command-permission set )
 		.addSubcommandGroup(group =>
 			group.setName('command-permission')
 				.setDescription('Configure the permissions of the different commands')
-
-			// Add permission
 				.addSubcommand(sub =>
 					sub.setName('add')
 						.setDescription('Add individual role/user permission for a command.')
@@ -48,16 +45,18 @@ module.exports = {
 								return { name: cmd, value: cmd };
 							}))
 						)
-						.addMentionableOption(opt =>
-							opt.setName('user-or-role')
-							.setDescription('The user or role to remove the permision for.')
+				)
+				.addSubcommand(sub =>
+					sub.setName('clear')
+						.setDescription('Clear all role/user permissions of command.')
+						.addStringOption(opt =>
+							opt.setName('command')
+							.setDescription('The command to remove all the permissions')
 							.setRequired(true)
+							.setChoices(...cmds.map(cmd => {
+								return { name: cmd, value: cmd };
+							}))
 						)
-						.addBooleanOption(opt => 
-							opt.setName('permission')
-							.setDescription('Wether the role or user have permission to use the command.')
-							.setRequired(true)
-						),
 				),
 		),
 	/**
@@ -74,9 +73,14 @@ module.exports = {
 		switch(group) {
 			case 'command-permission':
 				if (subcmd === 'add') {
-					await commandPermissionGroup.add(interaction)
+					await commandPermissionGroup.add(interaction);
+				} else if (subcmd === 'remove') {
+					await commandPermissionGroup.remove(interaction);
+				} else if (subcmd === 'clear') {
+					await commandPermissionGroup.clear(interaction);
 				}
 				break;
+
 		}
 	},
 };
