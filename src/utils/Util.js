@@ -1,5 +1,5 @@
 'use-strict';
-const { EmbedBuilder, Guild } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const path = require('path');
 const fs = require('fs');
 
@@ -43,9 +43,9 @@ class Util extends null {
 	}
 
 	/**
-	 * 
-	 * @param {Guild} guild 
-	 * @returns 
+	 *
+	 * @param {import('discord.js').Guild} guild
+	 * @returns
 	 */
 	static async getCommands(guild) {
 		const commands = await guild.commands.fetch();

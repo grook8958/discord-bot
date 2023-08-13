@@ -1,25 +1,20 @@
 const { Events, PermissionFlagsBits } = require('discord.js');
 const Console = require('../utils/BotConsole');
-const CommandPermissionManager = require('../modules/CommandPermissionManager');
 const Util = require('../utils/Util');
 
 module.exports = {
 	name: Events.InteractionCreate,
 	/**
-	 * 
-	 * @param {import('discord.js').Interaction} interaction 
-	 * @returns 
+	 *
+	 * @param {import('discord.js').Interaction} interaction
+	 * @returns
 	 */
 	async execute(interaction) {
 		/**
-     	 * @type {CommandPermissionManager}
+     	 * @type {import('../modules/CommandPermissionManager')}
      	 */
 		const commandPermissionManager = interaction.client.commandPermissionManager;
 
-		if (interaction.isAutocomplete()) {
-			
-		}
-		
 		if (!interaction.isChatInputCommand()) return;
 
 		const command = interaction.client.commands.get(interaction.commandName);
@@ -28,11 +23,11 @@ module.exports = {
 			Console.error(`No command matching ${interaction.commandName} was found.`);
 			return;
 		}
-		
+
 		if (commandPermissionManager.hasPermission(interaction.guild.id, interaction.commandName, interaction.member) === false && (interaction.memberPermissions.has(PermissionFlagsBits.Administrator, true) === false || process.env.ADMIN_PERMISSION_BYPASS === 'false')) {
 			return await interaction.reply({
-				embeds: [Util.errorEmbed('You do not have permission to run this command.')]
-			})
+				embeds: [Util.errorEmbed('You do not have permission to run this command.')],
+			});
 		}
 
 		try {

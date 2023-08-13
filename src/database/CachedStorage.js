@@ -24,7 +24,7 @@ class CachedStorage {
 	/**
      * Retrieve a specific data array from the Cached Storage.
      * @param {string} name The name of the data array
-	 * @param {?boolean} force Wether to force fetch 
+	 * @param {?boolean} force Wether to force fetch
      * @returns {Array<string>}
      */
 	get(name, force = false) {
@@ -71,8 +71,9 @@ class CachedStorage {
 		if (!Array.isArray(items)) throw new TypeError('[INVALID_TYPE] "items" must be an array.');
 		const dataArray = this.get(name);
 		if (!dataArray || dataArray[0].length === 0) {
-			return this.set(name, items)
-		} else {
+			return this.set(name, items);
+		}
+		else {
 			dataArray.push(...items);
 			return this.set(name, dataArray);
 		}
@@ -110,20 +111,20 @@ class CachedStorage {
 	save(_cachedStoragePath = this.cachedStoragePath) {
 		const dataStringArray = [];
 		for (const prop in this._cachedStorage) {
-			const data = this._cachedStorage[prop]
+			const data = this._cachedStorage[prop];
 			dataStringArray.push(`:${prop}:<${data.join('|')}>`);
 		}
 		const data = dataStringArray.join('/') + '/';
 		fs.writeFileSync(_cachedStoragePath, data, { encoding: 'utf-8' });
 	}
 
-	static arrayRemove = (arr, ...items) => {
+	static arrayRemove(arr, ...items) {
 		items.forEach(item => {
 			const index = arr.indexOf(item);
 			arr.splice(index, 1);
 		});
 		return arr;
-	};
+	}
 }
 
 module.exports = CachedStorage;

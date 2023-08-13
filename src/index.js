@@ -44,7 +44,7 @@ for (const file of eventFiles) {
 	}
 }
 
-//Init Modules
+// Init Modules
 client.commandPermissionManager = new CommandPermissionManager();
 
 client.login(process.env.DISCORD_TOKEN);

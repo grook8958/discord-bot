@@ -1,4 +1,3 @@
-const { GuildMember } = require('discord.js');
 const CommandPermissionStorageController = require('../database/CommandPermissionStorageController');
 const Console = require('../utils/BotConsole');
 
@@ -22,8 +21,8 @@ class CommandPermissionManager {
 
 	/**
 	 * Set permissions for a command
-	 * @param {string} guildId 
-	 * @param {Array<Command>} commands 
+	 * @param {string} guildId
+	 * @param {Array<Command>} commands
 	 * @returns {Array<Command>}
 	 */
 	set(guildId, commands) {
@@ -35,8 +34,8 @@ class CommandPermissionManager {
 
 	/**
 	 * Add permisisons for a command
-	 * @param {string} guildId 
-	 * @param {Command} command 
+	 * @param {string} guildId
+	 * @param {Command} command
 	 * @returns {Command}
 	 */
 	add(guildId, command) {
@@ -47,14 +46,14 @@ class CommandPermissionManager {
 
 	/**
 	 * Adds one or more permisisons to a command.
-	 * @param {string} guildId 
-	 * @param {string} commandName 
-	 * @param  {Array<CommandPermission>} permissions 
+	 * @param {string} guildId
+	 * @param {string} commandName
+	 * @param  {Array<CommandPermission>} permissions
 	 * @returns {Array<Command>}
 	 */
 	addPermissions(guildId, commandName, permissions) {
 		const commands = this.get(guildId);
-		if (commands.length === 0) return this.set(guildId, [{name: commandName, permissions: permissions}]);
+		if (commands.length === 0) return this.set(guildId, [{ name: commandName, permissions: permissions }]);
 		const command = commands.find(cmd => cmd.name === commandName);
 		command.permissions.push(...permissions);
 		return this.set(guildId, commands);
@@ -62,14 +61,14 @@ class CommandPermissionManager {
 
 	/**
 	 * Removes one or more permissions to a command
-	 * @param {string} guildId 
-	 * @param {string} commandName 
-	 * @param {Array<CommandPermission>} permissions 
+	 * @param {string} guildId
+	 * @param {string} commandName
+	 * @param {Array<CommandPermission>} permissions
 	 * @returns {Array<Command>}
 	 */
 	removePermissions(guildId, commandName, permissions) {
 		const commands = this.get(guildId);
-		if (commands.length === 0) return Console.warn('Trying to remove permissions from an empty array.')
+		if (commands.length === 0) return Console.warn('Trying to remove permissions from an empty array.');
 		const command = commands.find(cmd => cmd.name === commandName);
 		CommandPermissionStorageController.arrayRemove(command.permissions, ...permissions);
 		return this.set(guildId, commands);
@@ -77,7 +76,7 @@ class CommandPermissionManager {
 
 	/**
 	 * Get permissions for a command
-	 * @param {string} guildId 
+	 * @param {string} guildId
 	 * @returns {Array<Command>}
 	 */
 	get(guildId) {
@@ -87,24 +86,24 @@ class CommandPermissionManager {
 
 	/**
 	 * Check if a member has permission to use a command.
-	 * @param {string} guildId 
-	 * @param {string} commandName 
-	 * @param {GuildMember} member 
+	 * @param {string} guildId
+	 * @param {string} commandName
+	 * @param {import('discord.js').GuildMember}
 	 * @returns {boolean}
 	 */
 	hasPermission(guildId, commandName, member) {
 		const command = this.get(guildId).find(cmd => cmd.name === commandName);
 		if (command.permissions.length === 0) return null;
 		for (const permission of command.permissions) {
-			if (permission.type === 'USER' && permission.id === member.id && permission.permission === true) return true
-			else if (permission.type === 'ROLE' && member.roles.cache.has(permission.id) && permission.permission === true) return true
-			else return false
+			if (permission.type === 'USER' && permission.id === member.id && permission.permission === true) return true;
+			else if (permission.type === 'ROLE' && member.roles.cache.has(permission.id) && permission.permission === true) return true;
+			else return false;
 		}
 	}
 
 	setPermissions(guildId, commandName, permissions) {
 		const commands = this.get(guildId);
-		if (commands.length === 0) return this.set(guildId, [{name: commandName, permissions: permissions}]);
+		if (commands.length === 0) return this.set(guildId, [{ name: commandName, permissions: permissions }]);
 		const command = commands.find(cmd => cmd.name === commandName);
 		command.permissions = permissions;
 		return this.set(guildId, commands);
