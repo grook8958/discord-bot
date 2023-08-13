@@ -93,6 +93,7 @@ class CommandPermissionManager {
 	 */
 	hasPermission(guildId, commandName, member) {
 		const command = this.get(guildId).find(cmd => cmd.name === commandName);
+		if (!command) return null;
 		if (command.permissions.length === 0) return null;
 		for (const permission of command.permissions) {
 			if (permission.type === 'USER' && permission.id === member.id && permission.permission === true) return true;
