@@ -10,7 +10,7 @@
     "dev": "node ./dev/_index.js",
     "dev-deploy": "node ./dev/_deploy.js",
     "dev-clearCommands": "node ./dev/_clearCommands.js",
-    "lint": "npx eslint ./src/ --fix"
+    "linter": "npx eslint ./src/ --fix"
   },
   "keywords": [],
   "author": "",
