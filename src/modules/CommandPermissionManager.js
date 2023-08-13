@@ -78,7 +78,6 @@ class CommandPermissionManager {
 	/**
 	 * Get permissions for a command
 	 * @param {string} guildId 
-	 * @param {string} commandName 
 	 * @returns {Array<Command>}
 	 */
 	get(guildId) {
@@ -95,11 +94,20 @@ class CommandPermissionManager {
 	 */
 	hasPermission(guildId, commandName, member) {
 		const command = this.get(guildId).find(cmd => cmd.name === commandName);
+		if (command.permissions.length === 0) return null;
 		for (const permission of command.permissions) {
 			if (permission.type === 'USER' && permission.id === member.id && permission.permission === true) return true
 			else if (permission.type === 'ROLE' && member.roles.cache.has(permission.id) && permission.permission === true) return true
 			else return false
 		}
+	}
+
+	setPermissions(guildId, commandName, permissions) {
+		const commands = this.get(guildId);
+		if (commands.length === 0) return this.set(guildId, [{name: commandName, permissions: permissions}]);
+		const command = commands.find(cmd => cmd.name === commandName);
+		command.permissions = permissions;
+		return this.set(guildId, commands);
 	}
 }
 
