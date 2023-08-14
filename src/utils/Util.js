@@ -51,6 +51,39 @@ class Util extends null {
 		const commands = await guild.commands.fetch();
 		return commands;
 	}
+
+	/**
+	 * Updates an object according to a `change` object.
+	 * @param {object} object The object to update
+	 * @param {object} change What to change in the `object`
+	 * @returns {Object}
+	 */
+	static mergeObjects(object, change) {
+		if (Object.is(object, change)) return;
+
+		const newObject = object;
+		const objectFields = [];
+		for (const prop in newObject) {
+			if (typeof newObject[prop] !== 'object') continue;
+			if (
+				Object.getOwnPropertyDescriptors(newObject)[prop].configurable === false ||
+				Object.getOwnPropertyDescriptors(newObject)[prop].enumerable === false ||
+				Object.getOwnPropertyDescriptors(newObject)[prop].writable === false
+			) {continue;}
+			objectFields.push(prop);
+		}
+		for (const prop of objectFields) {
+			for (const key of Object.keys(change[prop])) {
+				if (typeof newObject[prop][key] !== 'object') {
+					newObject[prop][key] = change[prop][key];
+				}
+				else {
+					this.updateDocument(newObject[prop], change[prop]);
+				}
+			}
+		}
+		return newObject;
+	}
 }
 
 module.exports = Util;
