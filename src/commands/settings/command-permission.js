@@ -25,7 +25,7 @@ exports.add = async (interaction) => {
 	else if (userORrole instanceof GuildMember) {
 		interaction.client.commandPermissionManager.addPermissions(interaction.guild.id, commandName, [{ id: userORrole.id, type: 'USER', permission: permission }]);
 		await interaction.editReply({
-			embeds: [Util.successEmbed(`${permission ? 'Allowed' : 'Disallowed'} permission to </${commandName}:${id}> for <@${userORrole.id}>`)],
+			embeds: [Util.successEmbed(`**${permission ? 'Allowed' : 'Disallowed'}** permission to </${commandName}:${id}> for <@${userORrole.id}>`)],
 		});
 	}
 	else {
@@ -157,5 +157,21 @@ exports.clear = async (interaction) => {
 
 	return await interaction.editReply({
 		embeds: [Util.successEmbed(`Successfully cleared all permissions from </${commandName}:${id}>`)],
+	});
+};
+
+/**
+ *
+ * @param {import('discord.js').ChatInputCommandInteraction} interaction
+ */
+exports.allowAdminBypass = async (interaction) => {
+	const value = interaction.options.getBoolean('value');
+	/**
+	 * @type {import('../../modules/SettingsManager.js')}
+	 */
+	const settingsManager = interaction.client.settingsManager;
+	settingsManager.update(interaction.guild.id, { allowAdminBypass: value });
+	return await interaction.editReply({
+		embeds: [Util.successEmbed(`**${value ? 'Allowed' : 'Disallowed'}** users with the \`Administrator\` permisison to bypass user/role permissions.`)],
 	});
 };

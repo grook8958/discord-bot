@@ -57,6 +57,11 @@ module.exports = {
 									return { name: cmd, value: cmd };
 								})),
 						),
+				)
+				.addSubcommand(cmd =>
+					cmd.setName('allowAdminBypass')
+						.setDescription('Wether users with the Administrator permission can bypass role/user permisisons')
+						.addBooleanOption(opt => opt.setName('value').setRequired(true)),
 				),
 		),
 	/**
@@ -80,6 +85,9 @@ module.exports = {
 			}
 			else if (subcmd === 'clear') {
 				await commandPermissionGroup.clear(interaction);
+			}
+			else if (subcmd === 'allowAdminBypass') {
+				await commandPermissionGroup.allowAdminBypass(interaction);
 			}
 			break;
 
