@@ -86,7 +86,7 @@ module.exports = {
 			else if (subcmd === 'clear') {
 				await commandPermissionGroup.clear(interaction);
 			}
-			else if (subcmd === 'allowAdminBypass') {
+			else if (subcmd === 'allow-admin-bypass') {
 				await commandPermissionGroup.allowAdminBypass(interaction);
 			}
 			break;

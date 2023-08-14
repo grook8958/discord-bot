@@ -70,7 +70,9 @@ class SettingsManager {
      */
 	get(guildId) {
 		if (typeof guildId !== 'string') return Console.error('TypeError: guildId must be a string.');
-		return JSON.parse(this.controller.get(guildId)[0]);
+        const settings = this.controller.get(guildId)[0];
+		if (!settings) return {};
+        else return JSON.parse(settings);
 	}
 
 	/**
