@@ -7,7 +7,7 @@ class SettingsStorageController extends CachedSotrage {
      * @param {string} cachedStoragePath The path to the save file
      */
 	constructor(cachedStoragePath) {
-		super(cachedStoragePath ?? path.join(__dirname, '/LocalStorage/_settingsStorage'));
+		super(cachedStoragePath ?? path.join(__dirname, '/LocalStorage/settingsStorage.db'));
 	}
 }
 

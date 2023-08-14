@@ -12,7 +12,7 @@ class CachedStorage {
          * @type {string}
          * @readonly
          */
-		this.cachedStoragePath = cachedStoragePath ?? path.join(__dirname, 'LocalStorage/_cachedStorage');
+		this.cachedStoragePath = cachedStoragePath ?? path.join(__dirname, 'LocalStorage/_cachedStorage.db');
 
 		/**
          * The Cached Storage data

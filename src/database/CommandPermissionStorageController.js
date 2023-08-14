@@ -7,7 +7,7 @@ class CommandPermissionStorageController extends CachedSotrage {
      * @param {string} cachedStoragePath The path to the save file
      */
 	constructor(cachedStoragePath) {
-		super(cachedStoragePath ?? path.join(__dirname, '/LocalStorage/_commandPermissionStorage'));
+		super(cachedStoragePath ?? path.join(__dirname, '/LocalStorage/commandPermissionStorage.db'));
 	}
 }
 
