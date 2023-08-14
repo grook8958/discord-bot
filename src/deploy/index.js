@@ -39,7 +39,7 @@ const rest = new REST().setToken(process.env.DISCORD_TOKEN);
 		Console.log(`Successfully reloaded ${data.length} application (/) commands.`);
 	}
 	catch (error) {
-		// And of course, make sure you catch and log any errors!
+		Console.error('Error Deploying Commands. Perhaps the Client/Application ID is wrong?');
 		Console.error(error);
 	}
 })();
