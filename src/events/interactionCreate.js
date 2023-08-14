@@ -15,6 +15,11 @@ module.exports = {
      	 */
 		const commandPermissionManager = interaction.client.commandPermissionManager;
 
+		/**
+		 * @type {import('../modules/SettingsManager')}
+		 */
+		const settingsManager = interaction.client.settingsManager;
+
 		if (!interaction.isChatInputCommand()) return;
 
 		const command = interaction.client.commands.get(interaction.commandName);
@@ -24,7 +29,7 @@ module.exports = {
 			return;
 		}
 
-		if (commandPermissionManager.hasPermission(interaction.guild.id, interaction.commandName, interaction.member) === false && (interaction.memberPermissions.has(PermissionFlagsBits.Administrator, true) === false || process.env.ADMIN_PERMISSION_BYPASS === 'false')) {
+		if (commandPermissionManager.hasPermission(interaction.guild.id, interaction.commandName, interaction.member) === false && (interaction.memberPermissions.has(PermissionFlagsBits.Administrator, true) === false || settingsManager.get(interaction.guild.id).allowAdminBypass === false)) {
 			return await interaction.reply({
 				embeds: [Util.errorEmbed('You do not have permission to run this command.')],
 			});
