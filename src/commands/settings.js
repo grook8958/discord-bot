@@ -59,9 +59,9 @@ module.exports = {
 						),
 				)
 				.addSubcommand(cmd =>
-					cmd.setName('allowAdminBypass')
+					cmd.setName('allow-admin-bypass')
 						.setDescription('Wether users with the Administrator permission can bypass role/user permisisons')
-						.addBooleanOption(opt => opt.setName('value').setRequired(true)),
+						.addBooleanOption(opt => opt.setName('value').setRequired(true).setDescription('Wether users with the Administrator permission can bypass role/user permisisons')),
 				),
 		),
 	/**
