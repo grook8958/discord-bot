@@ -9,6 +9,15 @@ module.exports = {
 		.setDescription('Configure the bot\'s setting')
 		.setDMPermission(false)
 		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
+		.addSubcommand(subcmd =>
+			subcmd.setName('allow-higher-roles-moderation')
+			.setDescription('Wether a user can moderate another user with higher or equal roles')
+			.addBooleanOption(opt =>
+				opt.setName('value')
+				.setDescription('Wether a user can moderate another user with higher or equal roles')
+				.setRequired(true),
+			),
+		)
 		.addSubcommandGroup(group =>
 			group.setName('command-permission')
 				.setDescription('Configure the permissions of the different commands')
@@ -76,22 +85,50 @@ module.exports = {
 		await interaction.deferReply();
 
 		switch (group) {
-		case 'command-permission':
-			if (subcmd === 'add') {
-				await commandPermissionGroup.add(interaction);
-			}
-			else if (subcmd === 'remove') {
-				await commandPermissionGroup.remove(interaction);
-			}
-			else if (subcmd === 'clear') {
-				await commandPermissionGroup.clear(interaction);
-			}
-			else if (subcmd === 'allow-admin-bypass') {
-				await commandPermissionGroup.allowAdminBypass(interaction);
-			}
-			break;
-
+			case 'command-permission':
+				switch(subcmd) {
+					case('add'):
+						await commandPermissionGroup.add(interaction);
+						break;
+					case('remove'):
+						await commandPermissionGroup.remove(interaction);
+						break;
+					case('clear'):
+						await commandPermissionGroup.clear(interaction);
+						break;
+					case('allow-admin-bypass'):
+						await commandPermissionGroup.allowAdminBypass(interaction);
+						break;
+				}
+				break;
+			case(null):
+				await exports.updateBooleanSetting(Util.settingsNameConverter(subcmd), interaction);
+				break;
 		}
 	},
 };
-// Util.getCommands().map(cmd => cmd.name)
+
+/**
+ * 
+ * @param {string} settingName 
+ * @param {import('discord.js').ChatInputCommandInteraction} interaction 
+ */
+exports.updateBooleanSetting = async (settingName, interaction) => {
+	
+	const booleanSettingDescription = {
+		allowHigherRolesModeration: 'users to moderate another user with a higher or equal role.',
+		allowAdminModeration: 'users to moderate another user with the Administrator permission',
+	}
+
+	
+	const value = interaction.options.getBoolean('value');
+	/**
+	 * @type {import('../modules/SettingsManager.js')}
+	 */
+	const settingsManager = interaction.client.settingsManager;
+	console.log({ [settingName]: value })
+	settingsManager.update(interaction.guild.id, { allowHigherRolesModeration: value });
+	return await interaction.editReply({
+		embeds: [Util.successEmbed(`**${value ? 'Allowed' : 'Disallowed'}** ${booleanSettingDescription[settingName]}`)],
+	});
+}

@@ -3,6 +3,15 @@ const Console = require('../utils/BotConsole');
 const SettingsStorageController = require('../database/SettingsStorageController');
 const Util = require('../utils/Util');
 
+/**
+ * @typedef {Object} SettingsObject
+ * @property {boolean} allowAdminBypass Wether users with Administrator permissions bypass user/role permissions
+ * @property {string} loggerChannelId The Channel ID in which the logs should go.
+ * @property {boolean} loggerEnabled Wether the logging module is enabled.
+ * @property {boolean} allowHigherRolesModeration Wether a user can moderate another user with a higher role or equal role
+ * @property {boolean} allowAdminModeration Wether a user can moderate another user with the `Administrator` permission
+ */
+
 class SettingsManager {
 	/**
      * The Manager of the bot's settings
@@ -19,21 +28,18 @@ class SettingsManager {
 			allowAdminBypass: true,
             loggerChannelId: '',
             loggerEnabled: false,
+			allowHigherRolesModeration: false,
+			allowAdminModeration: false,
 		};
 	}
-
-	/**
-     * @typedef {Object} SettingsObject
-     * @property {boolean} allowAdminBypass Wether users with Administrator permissions bypass user/role permissions
-     * @property {string} loggerChannelId The Channel ID in which the logs should go.
-     * @property {boolean} loggerEnabled Wether the logging module is enabled.
-     */
 
 	/**
      * @typedef {Object} OptionalSettingsObject
      * @property {?boolean} allowAdminBypass Wether users with Administrator permissions bypass user/role permissions
      * @property {?string} loggerChannelId The Channel ID in which the logs should go.
      * @property {?boolean} loggerEnabled Wether the logging module is enabled.
+	 * @property {?boolean} allowHigherRolesModeration Wether a user can moderate another user with a higher role or equal role
+	 * @property {?boolean} allowAdminModeration Wether a user can moderate another user with the `Administrator` permission
      */
 
 	/**
