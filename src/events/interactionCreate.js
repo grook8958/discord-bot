@@ -42,7 +42,7 @@ module.exports = {
 
 		try {
 			Console.log(`Running /${interaction.commandName}`);
-			await logger.log(interaction.guildId, interaction.member, `<@${interaction.member.id}> executed </${interaction.commandName}:${interaction.commandId}>\n`, 'Command Executed')
+			await logger.log(interaction.guildId, interaction.member, `<@${interaction.member.id}> executed </${interaction.commandName}:${interaction.commandId}>\n`, 'Command Executed');
 			await command.execute(interaction);
 		}
 		catch (error) {

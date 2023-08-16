@@ -83,18 +83,19 @@ class Util extends null {
 		}
 		for (const prop in newObject) {
 			if (prop in change) {
-				newObject[prop] = change[prop]
+				newObject[prop] = change[prop];
 			}
 		}
 		return newObject;
 	}
 
 	/**
-	 * 
-	 * @param {string} settingsCmdName 
+	 * Converts a setting command name to a mapped setting name.
+	 * @param {string} settingsCmdName
 	 */
 	static settingsNameConverter(settingsCmdName) {
-		return settingsCmdName.split('-').map((el, i) => {if (i === 0) return el; else return el.replace(el.at(0), el.at(0).toUpperCase())}).join('');
+		// eslint-disable-next-line max-statements-per-line
+		return settingsCmdName.split('-').map((el, i) => {if (i === 0) return el; else return el.replace(el.at(0), el.at(0).toUpperCase());}).join('');
 	}
 }
 

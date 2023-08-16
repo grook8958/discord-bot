@@ -26,8 +26,8 @@ class SettingsManager {
          */
 		this.defaultOptions = {
 			allowAdminBypass: true,
-            loggerChannelId: '',
-            loggerEnabled: false,
+			loggerChannelId: '',
+			loggerEnabled: false,
 			allowHigherRolesModeration: false,
 			allowAdminModeration: false,
 		};
@@ -82,9 +82,9 @@ class SettingsManager {
      */
 	get(guildId) {
 		if (typeof guildId !== 'string') return Console.error('TypeError: guildId must be a string.');
-        const settings = this.controller.get(guildId)[0];
+		const settings = this.controller.get(guildId)[0];
 		if (!settings) return {};
-        else return JSON.parse(settings);
+		else return JSON.parse(settings);
 	}
 
 	/**
