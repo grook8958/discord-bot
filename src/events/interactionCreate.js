@@ -20,6 +20,11 @@ module.exports = {
 		 */
 		const settingsManager = interaction.client.settingsManager;
 
+		/**
+		 * @type {import('../modules/Logger')}
+		 */
+		const logger = interaction.client.logger;
+
 		if (!interaction.isChatInputCommand()) return;
 
 		const command = interaction.client.commands.get(interaction.commandName);
@@ -37,6 +42,7 @@ module.exports = {
 
 		try {
 			Console.log(`Running /${interaction.commandName}`);
+			await logger.log(interaction.guildId, interaction.member, `<@${interaction.member.id}> executed </${interaction.commandName}:${interaction.commandId}>\n`, 'Command Executed')
 			await command.execute(interaction);
 		}
 		catch (error) {

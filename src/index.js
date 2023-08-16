@@ -7,6 +7,7 @@ const fs = require('fs');
 
 const CommandPermissionManager = require('./modules/CommandPermissionManager');
 const SettingsManager = require('./modules/SettingsManager');
+const Logger = require('./modules/Logger');
 
 const client = new Client({
 	intents: [GatewayIntentBits.Guilds, GatewayIntentBits.DirectMessages, GatewayIntentBits.GuildMembers],
@@ -48,6 +49,7 @@ for (const file of eventFiles) {
 // Init Modules
 client.commandPermissionManager = new CommandPermissionManager();
 client.settingsManager = new SettingsManager();
+client.logger = new Logger(client);
 
 client.login(process.env.DISCORD_TOKEN).catch(() => {
 	Console.error('Invalid Discord Token');

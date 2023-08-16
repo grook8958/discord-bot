@@ -17,17 +17,23 @@ class SettingsManager {
          */
 		this.defaultOptions = {
 			allowAdminBypass: true,
+            loggerChannelId: '',
+            loggerEnabled: false,
 		};
 	}
 
 	/**
      * @typedef {Object} SettingsObject
      * @property {boolean} allowAdminBypass Wether users with Administrator permissions bypass user/role permissions
+     * @property {string} loggerChannelId The Channel ID in which the logs should go.
+     * @property {boolean} loggerEnabled Wether the logging module is enabled.
      */
 
 	/**
      * @typedef {Object} OptionalSettingsObject
      * @property {?boolean} allowAdminBypass Wether users with Administrator permissions bypass user/role permissions
+     * @property {?string} loggerChannelId The Channel ID in which the logs should go.
+     * @property {?boolean} loggerEnabled Wether the logging module is enabled.
      */
 
 	/**
