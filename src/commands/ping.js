@@ -18,7 +18,7 @@ module.exports = {
 
 		const ping = Date.now() - msg.createdTimestamp;
 
-		const embed2 = new EmbedBuilder().setDescription(`Ping: \`${ping}\`\nWebsocket Ping: \`${interaction.client.ws.ping}\``).setColor(process.env.EMBED_INFO_COLOUR);
+		const embed2 = new EmbedBuilder().setDescription(`🏓 Pong!\nPing: \`${ping}\`ms\nWebsocket Ping: \`${interaction.client.ws.ping}\`ms`).setColor(process.env.EMBED_INFO_COLOUR);
 
 		await interaction.editReply({
 			embeds: [embed2],
