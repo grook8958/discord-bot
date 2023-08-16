@@ -60,7 +60,6 @@ class Util extends null {
 	 */
 	static mergeObjects(object, change) {
 		if (Object.is(object, change)) return;
-
 		const newObject = object;
 		const objectFields = [];
 		for (const prop in newObject) {
@@ -78,11 +77,24 @@ class Util extends null {
 					newObject[prop][key] = change[prop][key];
 				}
 				else {
-					this.updateDocument(newObject[prop], change[prop]);
+					this.mergeObjects(newObject[prop], change[prop]);
 				}
 			}
 		}
+		for (const prop in newObject) {
+			if (prop in change) {
+				newObject[prop] = change[prop]
+			}
+		}
 		return newObject;
+	}
+
+	/**
+	 * 
+	 * @param {string} settingsCmdName 
+	 */
+	static settingsNameConverter(settingsCmdName) {
+		return settingsCmdName.split('-').map((el, i) => {if (i === 0) return el; else return el.replace(el.at(0), el.at(0).toUpperCase())}).join('');
 	}
 }
 
