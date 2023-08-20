@@ -135,7 +135,6 @@ exports.updateBooleanSetting = async (settingName, interaction) => {
 	 * @type {import('../modules/SettingsManager.js')}
 	 */
 	const settingsManager = interaction.client.settingsManager;
-	console.log({ [settingName]: value });
 	settingsManager.update(interaction.guild.id, { allowHigherRolesModeration: value });
 	return await interaction.editReply({
 		embeds: [Util.successEmbed(`**${value ? 'Allowed' : 'Disallowed'}** ${booleanSettingDescription[settingName]}`)],
