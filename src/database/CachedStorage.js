@@ -70,7 +70,7 @@ class CachedStorage {
 		if (typeof name != 'string') throw new TypeError('[INVALID_TYPE] "name" must be a string.');
 		if (!Array.isArray(items)) throw new TypeError('[INVALID_TYPE] "items" must be an array.');
 		const dataArray = this.get(name);
-		if (!dataArray || dataArray[0].length === 0) {
+		if (dataArray.length === 0 || dataArray[0].length === 0) {
 			return this.set(name, items);
 		}
 		else {
