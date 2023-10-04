@@ -25,6 +25,12 @@ module.exports = {
 		 */
 		const logger = interaction.client.logger;
 
+		if (interaction.isAutocomplete()) {
+			const command = interaction.client.commands.get(interaction.commandName);
+			if (typeof command.autoComplete !== 'function') return Console.warn(`${interaction.commandName} does not have an autocomplete function when it was requested.`)
+			return await command.autoComplete(interaction);
+		}
+
 		if (!interaction.isChatInputCommand()) return;
 
 		const command = interaction.client.commands.get(interaction.commandName);
