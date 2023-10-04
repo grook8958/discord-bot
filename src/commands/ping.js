@@ -5,6 +5,11 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('ping')
 		.setDescription('Returns the latency of the bot.'),
+	defaultPermissions: [{
+		id: '@everyone',
+		type: 'EVERYONE',
+		permission: true,
+	}],
 	/**
 	 * @param {import('discord.js').ChatInputCommandInteraction} interaction
 	 */

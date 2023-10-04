@@ -10,6 +10,11 @@ module.exports = {
 			option.setName('command')
 				.setDescription('The command to reload.')
 				.setRequired(true)),
+	defaultPermissions: [{
+		id: process.env.OWNER_ID,
+		type: 'USER',
+		permission: true,
+	}],
 	async execute(interaction) {
 		const commandName = interaction.options.getString('command', true).toLowerCase();
 		const command = interaction.client.commands.get(commandName);
