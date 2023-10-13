@@ -18,6 +18,11 @@ module.exports = {
 				.setDescription('The reason why the member is being kicked.')
 				.setRequired(false),
 		),
+	defaultPermissions: [{
+		id: PermissionFlagsBits.KickMembers.toString(),
+		type: 'DISCORD_PERMISSION',
+		permission: true,
+	}],
 	/**
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
@@ -37,6 +42,11 @@ module.exports = {
          * @type {import('../modules/Logger')}
          */
 		const logger = interaction.client.logger;
+
+		/**
+		 * @type {import('../modules/ModLogsManager')}
+		 */
+		const modLogs = interaction.client.modLogsManager;
 
 		if (!target.kickable && !interaction.guild.members.me.permissions.has(PermissionFlagsBits.KickMembers)) return await interaction.reply({ embeds: [Util.errorEmbed('I cannot kick this user. Perhaps my permissions are wrong?')] });
 
@@ -68,5 +78,12 @@ module.exports = {
 		});
 
 		await logger.log(interaction.guildId, interaction.member, `<@${interaction.user.id}> kicked <@${target.user.id}> with reason: **${reason}**`, 'Member Kicked');
+		modLogs.add(interaction.guild.id, target.id, [{
+			id: modLogs.ID,
+			type: 'KICK',
+			reason: reason,
+			moderatorId: interaction.member.id,
+			moderatorName: interaction.user.username,
+		}]);
 	},
 };
