@@ -33,7 +33,7 @@ class ModLogsManager {
      * @param {string} userId
      * @param {Array<ModLog>} modLogs
      */
-	setModLogs(guildId, userId, modLogs) {
+	set(guildId, userId, modLogs) {
 		if (typeof guildId !== 'string') return Console.error('TypeError: guildId must be a string.');
 		if (typeof userId !== 'string') return Console.error('TypeError: userId must be a string.');
 		if (!Array.isArray(modLogs)) return Console.error('TypeError: modLogs must be an array.');
@@ -71,13 +71,13 @@ class ModLogsManager {
      * @param {string} userId
      * @param {Array<ModLog>} modLogs
      */
-	addModLogs(guildId, userId, modLogs) {
+	add(guildId, userId, modLogs) {
 		if (typeof guildId !== 'string') return Console.error('TypeError: guildId must be a string.');
 		if (typeof userId !== 'string') return Console.error('TypeError: userId must be a string.');
 		if (!Array.isArray(modLogs)) return Console.error('TypeError: modLogs must be an array.');
 		const userData = this.getUser(guildId, userId);
 		userData.modLogs.push(...modLogs);
-		return this.setModLogs(guildId, userId, userData.modLogs);
+		return this.set(guildId, userId, userData.modLogs);
 	}
 
 	/**
@@ -86,14 +86,18 @@ class ModLogsManager {
      * @param {string} userId
      * @param {Array<string} modLogsIds
      */
-	removeModLogs(guildId, userId, modLogsIds) {
+	remove(guildId, userId, modLogsIds) {
 		if (typeof guildId !== 'string') return Console.error('TypeError: guildId must be a string.');
 		if (typeof userId !== 'string') return Console.error('TypeError: userId must be a string.');
 		if (!Array.isArray(modLogsIds)) return Console.error('TypeError: modLogsIds must be an array.');
 		const userData = this.getUser(guildId, userId);
 		const modLogs = modLogsIds.map(el => userData.modLogs.find(e => e.id === el));
 		ModLogsStorageController.arrayRemove(userData.modLogs, modLogs);
-		return this.setModLogs(guildId, userId, userData.modLogs);
+		return this.set(guildId, userId, userData.modLogs);
+	}
+
+	get ID() {
+		return require('crypto').randomUUID();
 	}
 }
 
