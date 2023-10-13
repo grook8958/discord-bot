@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, PermissionFlagsBits } = require('discord.js');
+const { SlashCommandBuilder, PermissionFlagsBits, ChannelType } = require('discord.js');
 const Util = require('../utils/Util');
 
 const cmds = Util.getCommandNames();
@@ -8,7 +8,6 @@ module.exports = {
 		.setName('settings')
 		.setDescription('Configure the bot\'s setting')
 		.setDMPermission(false)
-		.setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
 		.addSubcommand(subcmd =>
 			subcmd.setName('allow-higher-roles-moderation')
 				.setDescription('Wether a user can moderate another user with higher or equal roles')
@@ -81,13 +80,41 @@ module.exports = {
 						.setDescription('Wether users with the Administrator permission can bypass role/user permisisons')
 						.addBooleanOption(opt => opt.setName('value').setRequired(true).setDescription('Wether users with the Administrator permission can bypass role/user permisisons')),
 				),
+		)
+		.addSubcommandGroup(group =>
+			group.setName('logger')
+				.setDescription('Settings associated to the logging module.')
+				.addSubcommand(cmd =>
+					cmd.setName('enable')
+						.setDescription('Enable the logging module.'),
+				)
+				.addSubcommand(cmd =>
+					cmd.setName('disable')
+						.setDescription('Disable the logging module.'),
+				)
+				.addSubcommand(cmd =>
+					cmd.setName('set-logging-channel')
+						.setDescription('Disable the logging module.')
+						.addChannelOption(opt =>
+							opt.setName('channel')
+								.setDescription('The channel in which to logging module should send.')
+								.addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)
+								.setRequired(true),
+						),
+				),
 		),
+	defaultPermissions: [{
+		id: PermissionFlagsBits.ManageGuild.toString(),
+		type: 'DISCORD_PERMISSION',
+		permission: true,
+	}],
 	/**
 	 *
 	 * @param {import('discord.js').ChatInputCommandInteraction} interaction
 	 */
 	async execute(interaction) {
 		const commandPermissionGroup = require('./settings/command-permission');
+		const loggerGroup = require('./settings/logger');
 		const group = interaction.options.getSubcommandGroup();
 		const subcmd = interaction.options.getSubcommand();
 
@@ -107,6 +134,19 @@ module.exports = {
 				break;
 			case ('allow-admin-bypass'):
 				await commandPermissionGroup.allowAdminBypass(interaction);
+				break;
+			}
+			break;
+		case ('logger'):
+			switch (subcmd) {
+			case ('enable'):
+				await loggerGroup.enable(interaction);
+				break;
+			case ('disable'):
+				await loggerGroup.disable(interaction);
+				break;
+			case ('set-logging-channel'):
+				await loggerGroup.setLoggingChannel(interaction);
 				break;
 			}
 			break;
