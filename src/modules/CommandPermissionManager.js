@@ -4,12 +4,18 @@ const Console = require('../utils/BotConsole');
 class CommandPermissionManager {
 	constructor() {
 		this.controller = new CommandPermissionStorageController();
+		this.CommandPermissionTypes = [
+			'ROLE',
+			'USER',
+			'DISCORD_PERMISSION',
+			'EVERYONE'
+		]
 	}
 
 	/**
 	 * @typedef {Object} CommandPermission
 	 * @property {string} id The id of user or role
-	 * @property {'ROLE' | 'USER'} type The type of id
+	 * @property {'ROLE' | 'USER' | 'DISCORD_PERMISSION' | 'EVERYONE'} type The type of id
 	 * @property {boolean} permission Wether they have permission or no
 	 */
 
@@ -55,6 +61,7 @@ class CommandPermissionManager {
 		const commands = this.get(guildId);
 		if (commands.length === 0) return this.set(guildId, [{ name: commandName, permissions: permissions }]);
 		const command = commands.find(cmd => cmd.name === commandName);
+
 		command.permissions.push(...permissions);
 		return this.set(guildId, commands);
 	}
@@ -88,26 +95,47 @@ class CommandPermissionManager {
 	 * Check if a member has permission to use a command.
 	 * @param {string} guildId
 	 * @param {string} commandName
-	 * @param {import('discord.js').GuildMember}
+	 * @param {import('discord.js').GuildMember} member
 	 * @returns {boolean}
 	 */
 	hasPermission(guildId, commandName, member) {
 		const command = this.get(guildId).find(cmd => cmd.name === commandName);
 		if (!command) return null;
-		if (command.permissions.length === 0) return null;
+		if (command.permissions.length === 0) return false;
 		for (const permission of command.permissions) {
 			if (permission.type === 'USER' && permission.id === member.id && permission.permission === true) return true;
 			else if (permission.type === 'ROLE' && member.roles.cache.has(permission.id) && permission.permission === true) return true;
+			else if (permission.type === 'DISCORD_PERMISSION' && member.permissions.has(BigInt(permission.id)) && permission.permission === true) return true;
+			else if (permission.type === 'EVERYONE' && permission.permission === true) return true;
 			else return false;
 		}
 	}
 
+	/**
+	 * Set the permissions of a command
+	 * @param {string} guildId
+	 * @param {string} commandName
+	 * @param {Array<CommandPermission>} permissions
+	 */
 	setPermissions(guildId, commandName, permissions) {
+		if (!Array.isArray(permissions) || !permissions.some(permission =>  typeof permission.id === 'string' && this.CommandPermissionTypes.includes(permission.type) && typeof permission.permission === 'boolean')) return Console.error('TypeError: permissions must be an array.');
 		const commands = this.get(guildId);
 		if (commands.length === 0) return this.set(guildId, [{ name: commandName, permissions: permissions }]);
 		const command = commands.find(cmd => cmd.name === commandName);
 		command.permissions = permissions;
 		return this.set(guildId, commands);
+	}
+
+	/**
+	 * Get a set of permissions for a command in a guild
+	 * @param {string} guildId
+	 * @param {string} commandName 
+	 * @returns {Array<CommandPermission>}
+	 */
+	getPermissions(guildId, commandName) {
+		if (typeof guildId !== 'string') return Console.error('guildId must be a string.');
+		if (typeof commandName !== 'string') return Console.error('commandName must be a string.');
+		return this.get(guildId).find(x => x.name === commandName).permissions;
 	}
 }
 
