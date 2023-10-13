@@ -137,6 +137,9 @@ exports.remove = async (interaction) => {
 
 	if (resInteraction.isStringSelectMenu()) {
 		commandPermissionManager.removePermissions(interaction.guild.id, commandName, resInteraction.values.map(el => JSON.parse(el)));
+		if (commandPermissionManager.getPermissions(resInteraction.guild.id, commandName).length === 0) {
+			commandPermissionManager.setPermissions(resInteraction.guild.id, commandName, client.commands.get(commandName).defaultPermisions);
+		}
 		resInteraction.reply({
 			embeds: [Util.successEmbed(`Successfully removed ${resInteraction.values.length} permissions from </${commandName}:${id}>`)],
 		});
@@ -149,11 +152,11 @@ exports.clear = async (interaction) => {
 	const id = (await Util.getCommands(interaction.guild)).find(cmd => cmd.name === commandName).id;
 
 	/**
-     * @type {CommandPermissionManager}
+     * @type {import('../../modules/CommandPermissionManager')}
      */
 	const commandPermissionManager = interaction.client.commandPermissionManager;
-
-	commandPermissionManager.setPermissions(interaction.guild.id, commandName, []);
+	//***
+	commandPermissionManager.setPermissions(interaction.guild.id, commandName, client.commands.get(commandName).defaultPermisions);
 
 	return await interaction.editReply({
 		embeds: [Util.successEmbed(`Successfully cleared all permissions from </${commandName}:${id}>`)],
